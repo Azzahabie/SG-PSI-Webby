@@ -275,7 +275,7 @@ const App = () => {
                           <tr key={index}>
                             <td class="purp">{new Date(item.timestamp).toLocaleTimeString('en-US', { timeZone: 'Asia/Singapore', hour: 'numeric', minute: 'numeric', hour12: true })}</td>
                             <td className={setTableBG(item.readings.psi_twenty_four_hourly.national)}>{item.readings.psi_twenty_four_hourly.national}</td>
-                            <td className={setTableBG(item.readings.psi_twenty_four_hourly.north + 300)}>{item.readings.psi_twenty_four_hourly.north}</td>
+                            <td className={setTableBG(item.readings.psi_twenty_four_hourly.north)}>{item.readings.psi_twenty_four_hourly.north}</td>
                             <td className={setTableBG(item.readings.psi_twenty_four_hourly.south)}>{item.readings.psi_twenty_four_hourly.south}</td>
                             <td className={setTableBG(item.readings.psi_twenty_four_hourly.east)}>{item.readings.psi_twenty_four_hourly.east}</td>
                             <td className={setTableBG(item.readings.psi_twenty_four_hourly.west)}>{item.readings.psi_twenty_four_hourly.west}</td>
