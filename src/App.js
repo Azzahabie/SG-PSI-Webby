@@ -3,8 +3,10 @@ import info from './info'
 import Calendar from 'react-calendar';
 import Modal from 'react-modal';
 import RingLoader from "react-spinners/RingLoader";
-import LoadingOverlay from 'react-loading-overlay'
 import React, { useEffect, useState } from 'react'
+import { ToastContainer, toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 const override = `
   position: absolute;
   top: 50%;
@@ -29,11 +31,11 @@ const App = () => {
   const [avgWestColor, setAvgWestColor] = useState("defaultColor")
   const [avgData, setAvgData] = useState()
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [testing,isTesting] = useState(false)
   let [loading, setLoading] = useState(true);
-  let [color, setColor] = useState("#7c77b9")
-
 
   useEffect(() => {
+    if(testing) return
     setLoading(true)
     var myDate = `${value.getFullYear()}-${('0' + (value.getMonth() + 1)).slice(-2)}-${('0' + value.getDate()).slice(-2)}`
     fetch(`https://api.data.gov.sg/v1/environment/psi?date=${myDate}`)
@@ -41,27 +43,37 @@ const App = () => {
       .then(data => {
         setApiData(data.items)
         setCalender(false)
+        setIsOpen(false)
         getAvg(data.items)
-        closeModal()
         setTimeout(() => {
           setLoading(false)
-        }, 800);
+        }, 700);
+      })
+      .catch(err => {
+        toast.error("Network Error Has Occurred")
+        setLoading(false)
       })
   }, [value])
 
-
-
-  // useEffect(() => {
-  //   getAvg(apiData)
-  //   return () => {
-  //     setCalender(false)
-  //   }
-  // }, [value])
+  useEffect(() => {
+    if (!testing) return
+    console.log("testing is true")
+    setApiData(info.items)
+    getAvg(info.items)
+    setLoading(false)
+    setCalender(false)
+    setIsOpen(false)
+    return () => {
+      setCalender(false)
+      setIsOpen(false)
+      setLoading(false)
+    }
+  }, [value])
 
   function getAvg(data) {
     let nationalAvg = 0, northAvg = 0, southAvg = 0, eastAvg = 0, westAvg = 0
     let dataLength = data.length
-    data.map((item, index) => {
+    data.forEach((item, index) => {
       nationalAvg += item.readings.psi_twenty_four_hourly.national
       northAvg += item.readings.psi_twenty_four_hourly.north
       southAvg += item.readings.psi_twenty_four_hourly.south
@@ -117,6 +129,7 @@ const App = () => {
       console.log(data)
     }
   }
+
   function setBgColor(index, range) {
     if (index === 0) {
       setAvgNationalColor(`data_${range}`)
@@ -140,23 +153,13 @@ const App = () => {
     return checkImpact(data)
   }
 
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  function afterOpenModal() {
-    // references are now sync'd and can be accessed.
-  }
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
   return (
     <div id="mainContainer">
-      {loading ? <div id="ringBG"><RingLoader color={color} loading={loading} css={override} size={150} /></div> :
+      {loading ? <div id="ringBG"><RingLoader color={'#7c77b9'} loading={loading} css={override} size={150} /></div> :
         <>
-          <div id="myHeader"><h2>Azzahabie's PSI Website</h2></div>
+          <div id="myHeader"><h2>Azzahabie's PSI Website</h2>
+          <ToastContainer theme="dark" />
+          </div>
           <div id="svgContainer">
             <svg viewBox="0 0 1113.12 574.33" id="mapSvg">
               <g id="West" className={westFill}>
@@ -187,7 +190,7 @@ const App = () => {
             </svg>
           </div>
           <h2 id="dateChosen">{`${value.toDateString()}`}</h2>
-          {avgData == undefined ? null :
+          {avgData === undefined ? null :
             <div id="averageDataContainer">
               <div className={`avgDiv ${avgNationalColor}`}>
                 <h3>National Avg</h3>
@@ -212,11 +215,10 @@ const App = () => {
             </div>
           }
           <div id="btn_calendarContainer">
-            <button class="button1" onClick={openModal}>Choose Date</button>
+            <button className={'button1'} onClick={()=>setIsOpen(true)}>Choose Date</button>
             <Modal
               isOpen={modalIsOpen}
-              onAfterOpen={afterOpenModal}
-              onRequestClose={closeModal}
+              onRequestClose={()=>setIsOpen(false)}
               className="Modal"
               overlayClassName="Overlay"
             >
@@ -229,7 +231,7 @@ const App = () => {
                 minDate={new Date(2016, 1, 8)}
                 class={'c1'}
               />
-              <button onClick={closeModal} id="closeBTN">Close</button>
+              <button onClick={() => setIsOpen(false)} id="closeBTN">Close</button>
             </Modal>
 
           </div>
@@ -266,21 +268,19 @@ const App = () => {
                       <th>West</th>
                     </tr>
                     <tr>
-                      <td class="purp">SGT</td>
-                      <td colSpan="5" id="PSI" class="purp">PSI</td>
+                      <td className={'purp'}>SGT</td>
+                      <td colSpan="5" id="PSI" className={'purp'}>PSI</td>
                     </tr>
                     {apiData.map((item, index) => {
                       return (
-                        <>
                           <tr key={index}>
-                            <td class="purp">{new Date(item.timestamp).toLocaleTimeString('en-US', { timeZone: 'Asia/Singapore', hour: 'numeric', minute: 'numeric', hour12: true })}</td>
+                            <td className={'purp'}>{new Date(item.timestamp).toLocaleTimeString('en-US', { timeZone: 'Asia/Singapore', hour: 'numeric', minute: 'numeric', hour12: true })}</td>
                             <td className={setTableBG(item.readings.psi_twenty_four_hourly.national)}>{item.readings.psi_twenty_four_hourly.national}</td>
                             <td className={setTableBG(item.readings.psi_twenty_four_hourly.north)}>{item.readings.psi_twenty_four_hourly.north}</td>
                             <td className={setTableBG(item.readings.psi_twenty_four_hourly.south)}>{item.readings.psi_twenty_four_hourly.south}</td>
                             <td className={setTableBG(item.readings.psi_twenty_four_hourly.east)}>{item.readings.psi_twenty_four_hourly.east}</td>
                             <td className={setTableBG(item.readings.psi_twenty_four_hourly.west)}>{item.readings.psi_twenty_four_hourly.west}</td>
                           </tr>
-                        </>
                       )
                     })}
                   </tbody>
