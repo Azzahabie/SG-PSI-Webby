@@ -32,11 +32,11 @@ const App = () => {
   const [avgWestColor, setAvgWestColor] = useState("defaultColor")
   const [avgData, setAvgData] = useState()
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [testing,isTesting] = useState(false)
+  const [testing, isTesting] = useState(false)
   let [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if(testing) return
+    if (testing) return
     setLoading(true)
     var myDate = `${value.getFullYear()}-${('0' + (value.getMonth() + 1)).slice(-2)}-${('0' + value.getDate()).slice(-2)}`
     fetch(`https://api.data.gov.sg/v1/environment/psi?date=${myDate}`)
@@ -156,10 +156,11 @@ const App = () => {
 
   return (
     <div id="mainContainer">
+      {/* checks if data is loading */}
       {loading ? <div id="ringBG"><RingLoader color={'#7c77b9'} loading={loading} css={override} size={150} /></div> :
         <>
           <div id="myHeader"><h2>Azzahabie's PSI Website</h2>
-          <ToastContainer theme="dark" />
+            <ToastContainer theme="dark" />
           </div>
           <div id="svgContainer">
             <svg viewBox="0 0 1113.12 574.33" id="mapSvg">
@@ -191,6 +192,7 @@ const App = () => {
             </svg>
           </div>
           <h2 id="dateChosen">{`${value.toDateString()}`}</h2>
+          {/* Loops though avg data and prints avg data */}
           {avgData === undefined ? null :
             <div id="averageDataContainer">
               <div className={`avgDiv ${avgNationalColor}`}>
@@ -216,10 +218,10 @@ const App = () => {
             </div>
           }
           <div id="btn_calendarContainer">
-            <button className={'button1'} onClick={()=>setIsOpen(true)}>Choose Date</button>
+            <button className={'button1'} onClick={() => setIsOpen(true)}>Choose Date</button>
             <Modal
               isOpen={modalIsOpen}
-              onRequestClose={()=>setIsOpen(false)}
+              onRequestClose={() => setIsOpen(false)}
               className="Modal"
               overlayClassName="Overlay"
             >
@@ -244,6 +246,7 @@ const App = () => {
             <Circle level={5} title='Dangerous' />
           </div>
           <div id="chartContainer">
+            {/* check if there is any data else return empty table */}
             {apiData == null ?
               <div id="tableContainer">
                 <table>
@@ -279,16 +282,17 @@ const App = () => {
                       <td className={'purp'}>SGT</td>
                       <td colSpan="5" id="PSI" className={'purp'}>PSI</td>
                     </tr>
+                    {/* loops through api data arr and prints it */}
                     {apiData.map((item, index) => {
                       return (
-                          <tr key={index}>
-                            <td className={'purp'}>{new Date(item.timestamp).toLocaleTimeString('en-US', { timeZone: 'Asia/Singapore', hour: 'numeric', minute: 'numeric', hour12: true })}</td>
-                            <td className={setTableBG(item.readings.psi_twenty_four_hourly.national)}>{item.readings.psi_twenty_four_hourly.national}</td>
-                            <td className={setTableBG(item.readings.psi_twenty_four_hourly.north)}>{item.readings.psi_twenty_four_hourly.north}</td>
-                            <td className={setTableBG(item.readings.psi_twenty_four_hourly.south)}>{item.readings.psi_twenty_four_hourly.south}</td>
-                            <td className={setTableBG(item.readings.psi_twenty_four_hourly.east)}>{item.readings.psi_twenty_four_hourly.east}</td>
-                            <td className={setTableBG(item.readings.psi_twenty_four_hourly.west)}>{item.readings.psi_twenty_four_hourly.west}</td>
-                          </tr>
+                        <tr key={index}>
+                          <td className={'purp'}>{new Date(item.timestamp).toLocaleTimeString('en-US', { timeZone: 'Asia/Singapore', hour: 'numeric', minute: 'numeric', hour12: true })}</td>
+                          <td className={setTableBG(item.readings.psi_twenty_four_hourly.national)}>{item.readings.psi_twenty_four_hourly.national}</td>
+                          <td className={setTableBG(item.readings.psi_twenty_four_hourly.north)}>{item.readings.psi_twenty_four_hourly.north}</td>
+                          <td className={setTableBG(item.readings.psi_twenty_four_hourly.south)}>{item.readings.psi_twenty_four_hourly.south}</td>
+                          <td className={setTableBG(item.readings.psi_twenty_four_hourly.east)}>{item.readings.psi_twenty_four_hourly.east}</td>
+                          <td className={setTableBG(item.readings.psi_twenty_four_hourly.west)}>{item.readings.psi_twenty_four_hourly.west}</td>
+                        </tr>
                       )
                     })}
                   </tbody>

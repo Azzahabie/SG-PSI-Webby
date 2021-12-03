@@ -1,6 +1,6 @@
 describe('Date Button Is Working', () => {
     it('Button Present', () => {
-        cy.visit('http://localhost:3000/')
+        cy.visit('http://localhost:3000/psi-azza')
         cy.get('#btn_calendarContainer').children().should('have.class', 'button1')
     })
     it('Button Is Clickable', () => {

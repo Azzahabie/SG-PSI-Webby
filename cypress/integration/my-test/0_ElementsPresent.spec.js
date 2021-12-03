@@ -1,6 +1,6 @@
 describe('All elements are present', () => {
     it('Main Container Found"', () => {
-        cy.visit('http://localhost:3000/')
+        cy.visit('http://localhost:3000/psi-azza')
         cy.get('#mainContainer')
     })
     it('My Header Present"', () => {
