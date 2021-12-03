@@ -3,6 +3,7 @@ import info from './info'
 import Calendar from 'react-calendar';
 import Modal from 'react-modal';
 import RingLoader from "react-spinners/RingLoader";
+import Circle from './components/circle/circle';
 import React, { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -234,6 +235,13 @@ const App = () => {
               <button onClick={() => setIsOpen(false)} id="closeBTN">Close</button>
             </Modal>
 
+          </div>
+          <div id="rangeContainer">
+            <Circle level={1} title='Healthy' />
+            <Circle level={2} title='Moderate' />
+            <Circle level={3} title='Unhealthy' />
+            <Circle level={4} title='Very-Unhealthy' />
+            <Circle level={5} title='Dangerous' />
           </div>
           <div id="chartContainer">
             {apiData == null ?

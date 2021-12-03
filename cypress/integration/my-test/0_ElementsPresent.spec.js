@@ -21,6 +21,9 @@ describe('All elements are present', () => {
     it('Choose data button Present', () => {
         cy.get('#btn_calendarContainer').children().should('have.class','button1')
     })
+    it('Range Container Present', () => {
+        cy.get('#rangeContainer').children().should('have.length',5)
+    })
     it('Chart Container Present', () => {
         cy.get('#chartContainer')
     })

@@ -1,0 +1,41 @@
+p {
+  padding: 0;
+  margin: 0;
+  margin-left: 5px;
+  color: #d3d4d9;
+}
+.container {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-left:10px;
+  margin-right:10px;
+}
+.dot {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+}
+.healthy {
+  background-color: #37c03388;
+}
+.moderate {
+  background-color: #3d8eb1c5;
+}
+.unhealthy {
+  background-color: #e2bc25b0;
+}
+.very_unhealthy {
+  background-color: #f68114be;
+}
+.dangerous {
+  background-color: #eb2c22ce;
+}
+
+@media only screen and (max-width: 600px) {
+.container {
+ 
+  margin-top:10px;
+  margin-bottom:10px;
+}
+}
